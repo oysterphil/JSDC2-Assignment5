@@ -1,12 +1,12 @@
-# [Your Name] Homework Submission
+# Philip Olive's Homework Submission
 
 ## Temperature Check
 
 Rate on a scale of 1-10.
 
-Comfort:
+Comfort: 9
 
-Completeness:
+Completeness: 10
 
 ## Questions?
 

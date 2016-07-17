@@ -1,0 +1,70 @@
+<!--
+
+JavaScript Development - Assignment 5
+
+Countly MVC
+
+The assignment is to make an MVC application used for counting things. Here are the specifications for the application:
+
+It should have three buttons (one for counting up, one for counting down, one for resetting to 0)
+It will display the count to the user
+If the count goes above 100, the color of the number will be red
+If the count goes below 0, the color of the number will be blue
+
+-->
+
+<!DOCTYPE html>
+<html>
+
+<!-- Link to CSS files in the <head></head> -->
+
+<head>
+	<title>COUNTLY MVC</title>
+	<link rel="stylesheet" type="text/css" href="css/style.css">
+</head>
+<body>
+	<h1>Countly</h1>
+	
+	<h2>Count:</h2>
+	
+	<!--Displaying the count dynamically through templating by setting the h3 id to 'count'-->
+	<h3 id="count"></h3>
+
+	<!--Creating the 3 buttons-->
+  	<button id="countUp">+1</button>
+  	<button id="countDown">-1</button>
+  	<button id="reset">Reset</button>
+
+  	<!--Pulling in JQuery-->
+	<script src="https://code.jquery.com/jquery-3.0.0.min.js" integrity="sha256-JmvOoLtYsmqlsWxa7mDSLMwa6dZ9rrIdtrrVYRnDRH0="   crossorigin="anonymous"></script>
+
+	<!--Pulling in Handlebars-->
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/handlebars.js/4.0.5/handlebars.min.js"></script>
+
+	<!--Pulling in JS code from file js-->
+	<script type="text/javascript" src="js/index.js"></script>
+	
+	<!--
+		Using Handlebars to change the color of the count through templating.
+		Here, I learned how to use else if in Handlebars, which is pretty
+		straightforward: 
+		{{I#if (condition here is true)}}
+		(then set class equal to this)
+		{{else if (this other condition here is true)}}
+		(then set class equal to this)
+		{{/if (to close if tag nothing is needed here)}}
+
+		You can also use else by taking away the if in the else if portion.
+
+		{{count}} refers to the key of the model object that you want displayed.
+	-->
+	<script type="text/x-handlebars-template" id="count-template">
+		<h3 class='{{#if greaterThanOneHundred}}
+			greaterThanOneHundred
+			{{else if lessThanZero}}
+			lessThanZero
+			{{/if}}'>{{count}}</h3>
+	</script>
+
+</body>
+</html>
