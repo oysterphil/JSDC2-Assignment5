@@ -32,13 +32,7 @@ var countInfo = {
 	function. Each button changes the count, either increasing, decreasing, or resetting it. 
 	renderCount() visually updates the count to reflect the putton pressed.
 
-	The function does this by first erasing the current count by first using jQuery to select 
-	the '#count' id tag associated with the empty <h3></h3> block. Then, it uses the .html()
-	method to overwrite the current count with the blank expression '' :
-
-	$('#count').html('');
-
-	renderCount() next references and compiles the Handlebars template created in index.html.
+	renderCount() first references and compiles the Handlebars template created in index.html.
 	It does this by first creating a local variable 'source' and setting it equal to the contents
 	currently contained within the #count-template block in index.html. Then, it compiles that
 	html so that it can be used like a function that objects can be passed into and dynamic 
@@ -51,15 +45,14 @@ var countInfo = {
 	passing the object countInfo into the just compiled template, thereby adding the new 
 	rendered element to the DOM:
 
-	$('#count').append(template(countInfo));
+	$('#count').html(template(countInfo));
 */
 
 function renderCount() {
-	$('#count').html('');
 	var source = $('#count-template').html();
 	var template = Handlebars.compile(source);
-	$('#count').append(template(countInfo));
-	}
+	$('#count').html(template(countInfo));
+}
 
 
 // Controller - Controller is responsible for event listeners and communicating those 
