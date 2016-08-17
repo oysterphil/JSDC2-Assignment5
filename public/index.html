@@ -14,8 +14,8 @@
 <body>
 
 <div id='content'>
-  <button id='googleLogin'>Sign in with Google</button>
-  <button id='logout' style="display:none">Logout</button>
+  <!-- Login Information -->
+  <div id='loginInformation'></div>
 
   <!-- Profile Information -->
   <p id="profileInformation"></p>
@@ -26,10 +26,8 @@
   <!-- Item Information -->
   <p id="viewItems"></p>
 
-  <button id='showScheduleDelivery'>Schedule a Delivery:</button>
-
-  <!-- Displaying delivery information dynamically through templating by setting the p id tag to 'scheduleDelivery' -->
-  <p id="scheduleDelivery" style="display:none"></p>
+  <!-- Schedule Delivery Form -->
+  <p id="scheduleDelivery"></p>
 
   </div>
 
@@ -62,6 +60,23 @@
   <script type="text/javascript" src="js/index.js"></script>
   
   <!--Handlebars Templates-->
+
+  <!-- Login Template -->
+  <script type="text/x-handlebars-template" id="loginInformationTemplate">
+    {{#if signedIn}}
+      <h2>{{user}}</h2> <button id='logout'>Logout</button>
+    {{else}}
+      <h1>Storganize</h1>
+      <button id='googleLogin'>Register/Sign in with Google</button>
+      <div id="registerLoginForm">
+        <h3>Register/Login</h3>
+        <input name="email" type="email" placeholder="Email Address" />
+        <input name="password" type="password" placeholder="Password" />
+        <input id="signUp" type="submit" value="Register" />
+        <input id="login" type="submit" value="Login" />
+      </div>
+    {{/if}}
+  </script>
 
   <!-- Profile Template -->
   <script type="text/x-handlebars-template" id="profileInformationTemplate">
@@ -123,8 +138,9 @@
   <!-- Schedule a Delivery Template -->
   <script type="text/x-handlebars-template" id="scheduleDeliveryTemplate">
     {{#if signedIn}} 
+    <button id='showScheduleDelivery'>Schedule a Delivery:</button>
       <div class="container">
-        <form id="scheduleDeliveryForm">
+        <form id="scheduleDeliveryForm" style="display:none">
           Delivery Date: <input id="scheduleDeliveryDate" type="text"><br>
           Delivery Time: <input id="scheduleDeliveryTime" type="text"><br>
           Delivery Address: <input id="scheduleDeliveryAddress" type="text"><br>

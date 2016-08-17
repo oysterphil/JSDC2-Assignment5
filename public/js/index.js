@@ -4,7 +4,7 @@
 
 //Model - displays the state of the application
 
-var customer = [
+var customer = 
     {
         user: undefined,
         signedIn: false,
@@ -91,44 +91,66 @@ var customer = [
             delivered: false
           }
         ],
-    }
-];
+    };
 
 //View - contains the templates and functions to render data into the templates.
 
-function loggedIn() {
-  document.getElementById("googleLogin").hidden = "hidden";
-  document.getElementById("logout").hidden = "";
+var loginTemplate;
+var profileTemplate;
+var deliveriesTemplate;
+var itemsTemplate;
+var scheduleDeliveryTemplate;
+
+function compileTemplates() {
+  var loginSource = $('#loginInformationTemplate').html();
+  loginTemplate = Handlebars.compile(loginSource);
+
+  var profileSource = $('#profileInformationTemplate').html();
+  profileTemplate = Handlebars.compile(profileSource);
+
+  var deliveriesSource = $('#viewDeliveriesTemplate').html();
+  deliveriesTemplate = Handlebars.compile(deliveriesSource);
+
+  var itemsSource = $('#viewItemsTemplate').html();
+  itemsTemplate = Handlebars.compile(itemsSource);
+
+  var scheduleDeliverySource = $('#scheduleDeliveryTemplate').html();
+  scheduleDeliveryTemplate = Handlebars.compile(scheduleDeliverySource);
 }
 
+function renderLogin() {
+  var loginHtml = loginTemplate(customer);
+  $('#loginInformation').html(loginHtml);
+}
 
 function renderProfile() {  
-  var source = $('#profileInformationTemplate').html();
-  var template = Handlebars.compile(source);
-  $('#profileInformation').html(template(customer[0]));
+  var profileHtml = profileTemplate(customer);
+  $('#profileInformation').html(profileHtml);
 }
 
 function renderDeliveries() {
-  var source = $('#viewDeliveriesTemplate').html();
-  var template = Handlebars.compile(source);
-  $('#deliveryLog').html(template(customer[0]));
+  var deliveriesHtml = deliveriesTemplate(customer);
+  $('#deliveryLog').html(deliveriesHtml);
 }
 
 function renderItems() {
-  var source = $('#viewItemsTemplate').html();
-  var template = Handlebars.compile(source);
-  $('#viewItems').html(template(customer[0]));
+  var itemsHtml = itemsTemplate(customer);
+  $('#viewItems').html(itemsHtml);
 }
 
 function renderScheduleDelivery() {
-  var source = $('#scheduleDeliveryTemplate').html();
-  var template = Handlebars.compile(source);
-  $('#scheduleDelivery').html(template(customer[0]));
+  var scheduleDeliveryHtml = scheduleDeliveryTemplate(customer);
+  $('#scheduleDelivery').html(scheduleDeliveryHtml);
 }
 
 
 // Controller - Controller is responsible for event listeners and communicating those 
 // events to the Model.
+
+function loggedIn() {
+  document.getElementById("googleLogin").hidden = "hidden";
+  document.getElementById("logout").hidden = "";
+}
 
 function authenticate() {
   var provider = new firebase.auth.GoogleAuthProvider();
@@ -160,12 +182,11 @@ function logOut() {
 }
 
 function revealDeliveryForm() {
-  document.querySelector('#scheduleDelivery').style.display="inline";
-  console.log(customer[0].items);
+  document.querySelector('#scheduleDeliveryForm').style.display="inline";
 }
 
 function hideDeliveryForm() {
-  document.querySelector('#scheduleDelivery').style.display="none";
+  document.querySelector('#scheduleDeliveryForm').style.display="none";
 }
 
 function processDeliveryRequest() {
@@ -180,17 +201,14 @@ function processDeliveryRequest() {
         itemDescription: $(this).attr('data-description')
       });
   }),
-  console.log(itemsToDeliver);
 
-  customer[0].deliveryLog.push({
+  customer.deliveryLog.push({
     deliveryDate: $('#scheduleDeliveryDate').val(),
     deliveryAddress: $('#scheduleDeliveryAddress').val(),
     deliveryTime: $('#scheduleDeliveryTime').val(),
     deliveryItems: itemsToDeliver,
     delivered: false
   });
-
-  console.log(customer[0].deliveryLog);
   
   renderDeliveries();
   renderScheduleDelivery();
@@ -213,12 +231,14 @@ firebase.auth().onAuthStateChanged(function(user) {
 });
 
 function setup() {
+  compileTemplates();
+  renderLogin();
   renderProfile();
   renderDeliveries();
   renderItems();
   renderScheduleDelivery();
 
-    //$('#signUp').on('click', firebaseAuthenticate);
+  //document.querySelector('#signUp').addEventListener('click', firebaseAuthenticate);
   document.querySelector('#googleLogin').addEventListener('click', authenticate);
   document.querySelector('#logout').addEventListener('click', logOut);
   document.querySelector('#showScheduleDelivery').addEventListener('click', revealDeliveryForm);
