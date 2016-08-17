@@ -1,0 +1,103 @@
+<!--GA JS-DC-2 Final Project - Build a Storganize Profile-->
+
+<!DOCTYPE html>
+<html lang="en">
+
+<!-- Link to CSS files in the <head></head> -->
+
+<head>
+  <title>Storganize</title>
+  <link type="text/css" rel="stylesheet" href="https://www.gstatic.com/firebasejs/ui/live/0.4/firebase-ui-auth.css" />
+  <link rel="stylesheet" type="text/css" href="css/style.css">
+</head> 
+
+  <button id="signUp">Sign up</button>
+  <button id="login">Login</button>
+  <div id="firebaseui-auth-container"></div>
+  <div id="sign-in-status"></div>
+  <div id="sign-in"></div>
+  <div id="account-details"></div>
+  
+  <!-- Profile Information -->
+  <h2>Profile Information:</h2>
+
+  <!-- Displaying profile information dynamically through templating by setting the p id tag to 'profileInformation' -->
+  <p id="profileInformation"></p>
+  
+  <h2>Deliveries:</h2>
+
+  <!-- Displaying delivery information dynamically through templating by setting the p id tag to 'deliveryHistory' -->
+  <p id="deliveryHistory"></p>
+
+  <h2>Your Items:</h2>
+
+  <!-- Displaying item inventory dynamically through templating by setting the p id tag to 'viewItems' -->
+  <p id="viewItems"></p>
+
+  <h2>Schedule a Delivery:</h2>
+
+  <!-- Displaying delivery information dynamically through templating by setting the p id tag to 'scheduleDelivery' -->
+  <p id="scheduleDelivery"></p>
+
+  <!-- Initializing Firebase -->
+  <script src="https://www.gstatic.com/firebasejs/3.2.0/firebase.js"></script>
+  <script>
+    // Initialize Firebase
+    var config = {
+      apiKey: "AIzaSyCUCeMQtapot0DD8Tq2f4xPEy9_VL-yGE4",
+      authDomain: "ga-final-project-67167.firebaseapp.com",
+      databaseURL: "https://ga-final-project-67167.firebaseio.com",
+      storageBucket: "ga-final-project-67167.appspot.com",
+    };
+    firebase.initializeApp(config);
+  </script>
+
+  <!-- Initializing FirebaseUI for Web — Auth -->
+  <script src="https://www.gstatic.com/firebasejs/ui/live/0.4/firebase-ui-auth.js"></script>
+      
+  <!--Pulling in JQuery-->
+  <script src="https://code.jquery.com/jquery-3.0.0.min.js" integrity="sha256-JmvOoLtYsmqlsWxa7mDSLMwa6dZ9rrIdtrrVYRnDRH0="   crossorigin="anonymous"></script>
+
+  <!--Pulling in Handlebars-->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/handlebars.js/4.0.5/handlebars.min.js"></script>
+
+  <!--Pulling in JS code from file js-->
+  <script type="text/javascript" src="js/index.js"></script>
+  
+  <!--Handlebars templates-->
+  <script type="text/x-handlebars-template" id="profileInformationTemplate">
+    <p>
+      Name: {{firstName}} {{lastName}} <br>
+      E-mail: {{email}} <br>
+      Service Tier: {{serviceTier}} <br>
+      Number of Items: {{items.length}} <br>
+      Date of First Billing: {{dateOfFirstBilling}}
+    </p>
+  </script>
+
+  <script type="text/x-handlebars-template" id="deliveryHistoryTemplate">
+      <p>{{deliveryDate}}</p>
+      <!-- {{#each deliveryHistory}}
+        <p>
+          {{deliveryDate}} to {{deliveryAddress}} at
+          {{deliveryTime}} <br>
+          Items: 
+          {{each deliveryItems}}
+            {{itemTagNumber}} - {{itemDescription}} <br>
+          {{/each}}
+        </p>
+      {{/each}} -->
+  </script>
+  
+  <script type="text/x-handlebars-template" id="viewItemsTemplate">
+    <p>
+      Name: {{firstName}} {{lastName}} <br>
+      E-mail: {{email}} <br>
+      Service Tier: {{serviceTier}} <br>
+      Number of Items: {{items.length}} <br>
+      Date of First Billing: {{dateOfFirstBilling}}
+    </p>
+  </script>
+
+</body>
+</html>
