@@ -3,99 +3,94 @@
 */
 
 //Model - displays the state of the application
-var customer = {
-  user: undefined,
-  signedIn: false,
-  uid: undefined,
-  customerName: undefined,
-  email: undefined,
-  serviceTier: undefined,
-  paidUpfront: undefined,
-  dateOfFirstBilling: undefined,
-  payMonthlyDate: undefined,
-  signUpDate: undefined,
-  items: undefined
-  // items: [
-  //   {
-  //     customers: {
-  //       'teat@test.com': true
-  //     },
-  //     itemTagNumber: 1,
-  //     itemPhoto: 'img/img1.jpg',
-  //     itemDescription: 'Item1',
-  //     itemType: 'box',
-  //     greaterThanFiftyLbs: false
-  //   },
-  //   {
-  //     customers: {
-  //       'teat@test.com': true
-  //     },
-  //     itemTagNumber: 2,
-  //     itemPhoto: 'img/img2.jpg',
-  //     itemDescription: 'Item2',
-  //     itemType: 'furniture',
-  //     greaterThanFiftyLbs: true
-  //   },
-  //   {
-  //     customers: {
-  //       'teat@test.com': true
-  //     },
-  //     itemTagNumber: 3,
-  //     itemPhoto: 'img/img3.jpg',
-  //     itemDescription: 'Item3',
-  //     itemType: 'box',
-  //     greaterThanFiftyLbs: false
-  //   }
-  // ],
-  // deliveryLog: [
-  //   {
-  //     deliveryId: 21312414,
-  //     deliveryDate: '1/15/2016',
-  //     deliveryAddress: '3378 Stephenon',
-  //     deliveryTime: '2 pm',
-  //     deliveryItems: [
-  //       {
-  //         itemTagNumber: 1
-  //       },
-  //       {
-  //         itemTagNumber: 2
-  //       }
-  //     ],
-  //     delivered: true
-  //   },
-  //   {
-  //     deliveryId: 4756745645634,
-  //     deliveryDate: '3/13/2016',
-  //     deliveryAddress: 'Hughes Hall',
-  //     deliveryTime: '4 pm',
-  //     deliveryItems: [
-  //       {
-        
-  //         itemTagNumber: 1
-  //       },
-  //       {
-  //         itemTagNumber: 2
-  //       }
-  //     ],
-  //     delivered: true
-  //   },
-  //   {
-  //     deliveryId: 34645767434,
-  //     deliveryDate: '12/2/2017',
-  //     deliveryAddress: 'Some Random Place',
-  //     deliveryTime: '11 am',
-  //     deliveryItems: [
-  //       {
-  //         itemTagNumber: 34
-  //       },
-  //       {
-  //         itemTagNumber: 432
-  //       }
-  //     ],
-  //     delivered: false
-  //   }
-  // ]
-}
+var customer = 
+    {
+        user: undefined,
+        signedIn: false,
+        token: '',
+        firstName: 'test',
+        lastName: 'test1',
+        email: 'teat@test.com',
+        serviceTier: '',
+        items: [
+          {
+            itemTagNumber: 1,
+            itemPhoto: 'img/img1.jpg',
+            itemDescription: 'Item1'
+          },
+          {
+            itemTagNumber: 2,
+            itemPhoto: 'img/img2.jpg',
+            itemDescription: 'Item2'
+          },
+          {
+            itemTagNumber: 3,
+            itemPhoto: 'img/img3.jpg',
+            itemDescription: 'Item3'
+          }
+        ],
+        paidUpfront: true,
+        dateOfFirstBilling: '5/3/2016',
+        payMonthlyDate: '',
+        deliveryLog: [
+          {
+            deliveryDate: '1/15/2016',
+            deliveryAddress: '3378 Stephenon',
+            deliveryTime: '2 pm',
+            deliveryItems: [
+              {
+                itemTagNumber: 1,
+                itemPhoto: 'img/img1.jpg',
+                itemDescription: 'Item1',
+              },
+              {
+                itemTagNumber: 2,
+                itemPhoto: 'img/img2.jpg',
+                itemDescription: 'Item2',
+              }
+            ],
+            delivered: true
+          },
+          {
+            deliveryDate: '3/13/2016',
+            deliveryAddress: 'Hughes Hall',
+            deliveryTime: '4 pm',
+            deliveryItems: [
+              {
+              
+                itemTagNumber: 1,
+                itemPhoto: 'img/img1.jpg',
+                itemDescription: 'Item1',
+              },
+              {
+                itemTagNumber: 2,
+                itemPhoto: 'img/img2.jpg',
+                itemDescription: 'Item2',
+              }
+            ],
+            delivered: true
+          },
+          {
+            deliveryDate: '12/2/2017',
+            deliveryAddress: 'Some Random Place',
+            deliveryTime: '11 am',
+            deliveryItems: [
+              {
+              
+                itemTagNumber: 34,
+                itemPhoto: 'img/img1.jpg',
+                itemDescription: 'Item1',
+              },
+              {
+                itemTagNumber: 432,
+                itemPhoto: 'img/img2.jpg',
+                itemDescription: 'Item2',
+              }
+            ],
+            delivered: false
+          }
+        ],
+    };
 
 //View - contains the templates and functions to render data into the templates.
 
@@ -163,14 +158,13 @@ function handleRegister() {
 function handleLogin() {
   var email = $('input[name="email"]').val();
   var password = $('input[name="password"]').val();
-  
 
   firebase.auth().signInWithEmailAndPassword(email, password);
 }
 
 function handleGoogleLogin() {
   var provider = new firebase.auth.GoogleAuthProvider();
-  firebase.auth().signInWithPopup(provider);
+  firebase.auth().signInWithPopup(provider)
 }
 
 function handleSignout() {
@@ -183,23 +177,12 @@ function handleAuthStateChange() {
   if (user) {
     customer.signedIn = true;
     customer.user = user;
-    customer.customerName = user.displayName;
-    customer.email = user.email;
-    customer.uid = user.uid;
-    console.log(customer);
-    firebase.database().ref('customers').on('value', updateModel);
-
   } else {
     customer.signedIn = false;
     customer.user = undefined;
   }
 
   renderAllTemplates();
-}
-
-function updateModel(snapshot) {
-  var update = snapshot.val();
-  customer.serviceTier = update.kpHpTPR9RGe3ib7asl9oaZDSr7l2.serviceTier;
 }
 
 // Delivery Controller
