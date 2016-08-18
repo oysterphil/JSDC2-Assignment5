@@ -3,7 +3,6 @@
 */
 
 //Model - displays the state of the application
-
 var customer = 
     {
         user: undefined,
@@ -11,7 +10,7 @@ var customer =
         token: '',
         firstName: 'test',
         lastName: 'test1',
-        email: '',
+        email: 'teat@test.com',
         serviceTier: '',
         items: [
           {
@@ -147,19 +146,31 @@ function renderScheduleDelivery() {
 // Controller - Controller is responsible for event listeners and communicating those 
 // events to the Model.
 
-function loggedIn() {
-  document.getElementById("googleLogin").hidden = "hidden";
-  document.getElementById("logout").hidden = "";
+// Login Controller
+
+function handleRegister() {
+  var email = $('input[name="email"]').val();
+  var password = $('input[name="password"]').val();
+
+  firebase.auth().createUserWithEmailAndPassword(email, password);
 }
 
-function authenticate() {
+function handleLogin() {
+  var email = $('input[name="email"]').val();
+  var password = $('input[name="password"]').val();
+
+  firebase.auth().signInWithEmailAndPassword(email, password);
+}
+
+function handleGoogleLogin() {
   var provider = new firebase.auth.GoogleAuthProvider();
   firebase.auth().signInWithPopup(provider).then(function(result) {
   // This gives you a Google Access Token. You can use it to access the Google API.
   customer.token = result.credential.accessToken;
   // The signed-in user info.
   customer.user = result.user;
-  // ...
+  customer.signedIn = true;
+  renderAllTemplates();
   }).catch(function(error) {
   // Handle Errors here.
   var errorCode = error.code;
@@ -170,16 +181,27 @@ function authenticate() {
   var credential = error.credential;
   // ...
   });
-  loggedIn();
 }
 
-function logOut() {
-  firebase.auth().signOut().then(function() {
-    document.querySelector('#googleLogin').style.display="inline";
-    document.querySelector('#logout').style.display="none";  }, function(error) {
-    // An error happened.
-  });
+function handleSignout() {
+  firebase.auth().signOut();
 }
+
+function handleAuthStateChange() {
+  var user = firebase.auth().currentUser;
+
+  if (user) {
+    customer.signedIn = true;
+    customer.user = user;
+  } else {
+    customer.signedIn = false;
+    customer.user = undefined;
+  }
+
+  renderAllTemplates();
+}
+
+// Delivery Controller
 
 function revealDeliveryForm() {
   document.querySelector('#scheduleDeliveryForm').style.display="inline";
@@ -210,25 +232,19 @@ function processDeliveryRequest() {
     delivered: false
   });
   
-  renderDeliveries();
-  renderScheduleDelivery();
+  renderAllTemplates();
   hideDeliveryForm();
 }
 
-// function countChecked() {
-//   var n = $( "input:checked" ).length;
-//   $("#countChecked").text( n + (n === 1 ? " is" : " are") + " checked!" );
-// }
+//General Controller 
 
-firebase.auth().onAuthStateChanged(function(user) {
-  if (user) {
-    // User is signed in.
-    document.querySelector('#googleLogin').style.display="none";
-    document.querySelector('#logout').style.display="inline";
-  } else {
-    // No user is signed in.
-  }
-});
+function renderAllTemplates() {
+  renderLogin();
+  renderProfile();
+  renderDeliveries();
+  renderItems();
+  renderScheduleDelivery();
+}
 
 function setup() {
   compileTemplates();
@@ -238,19 +254,26 @@ function setup() {
   renderItems();
   renderScheduleDelivery();
 
-  //document.querySelector('#signUp').addEventListener('click', firebaseAuthenticate);
-  document.querySelector('#googleLogin').addEventListener('click', authenticate);
-  document.querySelector('#logout').addEventListener('click', logOut);
-  document.querySelector('#showScheduleDelivery').addEventListener('click', revealDeliveryForm);
-  document.querySelector('#scheduleDeliverySubmit').addEventListener('click', processDeliveryRequest);
+  // Auth Event Listeners
+  $('#loginInformation').on('click', '#register', handleRegister);
+  $('#loginInformation').on('click', '#login', handleLogin);
+  $('#loginInformation').on('click', '#googleLogin', handleGoogleLogin);
+  $('#loginInformation').on('click', '#logout', handleSignout);
+  firebase.auth().onAuthStateChanged(handleAuthStateChange);
+
+  // Database Event Listeners
+  
+
+  $('#scheduleDelivery').on('click', '#showScheduleDelivery', revealDeliveryForm);
+  $('#scheduleDelivery').on('click', '#scheduleDeliverySubmit', processDeliveryRequest);
   // $( "input[type=checkbox]" ).on( "click", countChecked);
   //$('#selectItems').on('click', '.status', markChecked);
 
-/*  EXAMPLE LISTENERS:
-    $('#countUp').on('click', countUp);
-    $('#countDown').on('click', countDown);
-    $('#reset').on('click', reset);
-*/
+  // document.querySelector('#loginInformation').addEventListener('click', handleLogin, '#login');
+  // document.querySelector('#loginInformation').addEventListener('click', handleGoogleLogin, '#googleLogin');
+  // document.querySelector('#loginInformation').addEventListener('click', handleSignout, '#logout');
+  // document.querySelector('#scheduleDelivery').addEventListener('click', revealDeliveryForm, '#showScheduleDelivery');
+  // document.querySelector('#scheduleDelivery').addEventListener('click', processDeliveryRequest, '#scheduleDeliverySubmit');
 
 }
 
